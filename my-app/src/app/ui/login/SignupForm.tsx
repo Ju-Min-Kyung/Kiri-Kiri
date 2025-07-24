@@ -1,17 +1,45 @@
+"use client"
+
+import { useRouter } from "next/navigation" // ✅ 라우터 훅 추가
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Eye, EyeOff, Heart, Sparkles, User } from 'lucide-react'
 
 interface SignupFormProps {
-  onSubmit: (e: React.FormEvent) => void
   showPassword: boolean
   onTogglePassword: () => void
 }
 
-export default function SignupForm({ onSubmit, showPassword, onTogglePassword }: SignupFormProps) {
+export default function SignupForm({ showPassword, onTogglePassword }: SignupFormProps) {
+  const router = useRouter() // ✅ 라우터 인스턴스 생성
+  const [formData, setFormData] = useState({
+    name: '',
+    userId: '',
+    password: '',
+    code: '',
+  })
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    // TODO: 실제 회원가입 처리 로직을 여기에 추가
+
+    console.log("회원가입 정보:", formData)
+
+    // ✅ 회원가입 성공 시 /feed 페이지로 이동
+    router.push("/feed")
+  }
+
   return (
-    <form onSubmit={onSubmit} className="space-y-5">
+    <form onSubmit={handleSubmit} className="space-y-5">
+      
+      {/* 이름 입력 필드 */}
       <div className="space-y-2">
         <Label htmlFor="name" className="text-gray-300 font-medium text-sm flex items-center">
           <Heart className="w-4 h-4 mr-2" fill="currentColor" />
@@ -23,10 +51,13 @@ export default function SignupForm({ onSubmit, showPassword, onTogglePassword }:
           type="text"
           placeholder="이 름"
           required
+          value={formData.name}
+          onChange={handleChange}
           className="bg-gray-800/50 border-gray-600/50 text-white placeholder-gray-400 h-12 rounded-2xl focus:border-[#0067ac] focus:ring-[#0067ac]/20 transition-all duration-300"
         />
       </div>
 
+      {/* 아이디 입력 필드 */}
       <div className="space-y-2">
         <Label htmlFor="userId" className="text-gray-300 font-medium text-sm flex items-center">
           <User className="w-4 h-4 mr-2" />
@@ -38,10 +69,13 @@ export default function SignupForm({ onSubmit, showPassword, onTogglePassword }:
           type="text"
           placeholder="아이디"
           required
+          value={formData.userId}
+          onChange={handleChange}
           className="bg-gray-800/50 border-gray-600/50 text-white placeholder-gray-400 h-12 rounded-2xl focus:border-[#0067ac] focus:ring-[#0067ac]/20 transition-all duration-300"
         />
       </div>
       
+      {/* 비밀번호 입력 필드 */}
       <div className="space-y-2">
         <Label htmlFor="password" className="text-gray-300 font-medium text-sm flex items-center">
           <Sparkles className="w-4 h-4 mr-2" />
@@ -52,8 +86,10 @@ export default function SignupForm({ onSubmit, showPassword, onTogglePassword }:
             id="password"
             name="password"
             type={showPassword ? "text" : "password"}
-            placeholder="비밀번호 "
+            placeholder="비밀번호"
             required
+            value={formData.password}
+            onChange={handleChange}
             className="bg-gray-800/50 border-gray-600/50 text-white placeholder-gray-400 h-12 rounded-2xl focus:border-[#0067ac] focus:ring-[#0067ac]/20 pr-12 transition-all duration-300"
           />
           <Button
@@ -68,6 +104,7 @@ export default function SignupForm({ onSubmit, showPassword, onTogglePassword }:
         </div>
       </div>
 
+      {/* 초대 코드 입력 필드 */}
       <div className="space-y-2">
         <Label htmlFor="code" className="text-gray-300 font-medium text-sm flex items-center">
           <Heart className="w-4 h-4 mr-2" fill="currentColor" />
@@ -79,10 +116,13 @@ export default function SignupForm({ onSubmit, showPassword, onTogglePassword }:
           type="text"
           placeholder="시크릿 코드 입력"
           required
+          value={formData.code}
+          onChange={handleChange}
           className="bg-gray-800/50 border-gray-600/50 text-white placeholder-gray-400 h-12 rounded-2xl focus:border-[#0067ac] focus:ring-[#0067ac]/20 transition-all duration-300"
         />
       </div>
 
+      {/* 가입 버튼 */}
       <Button
         type="submit"
         className="w-full text-white border-0 h-12 rounded-2xl font-medium transition-all duration-300 transform hover:scale-105 shadow-lg"

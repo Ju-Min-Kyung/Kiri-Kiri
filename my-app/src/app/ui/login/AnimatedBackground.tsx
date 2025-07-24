@@ -1,12 +1,11 @@
 'use client'
 
-import { Heart, Sparkles } from "lucide-react"
+import { Heart, Sparkles } from 'lucide-react'
+import React from 'react'
 
-export default function LoginLayout({ children }) {
+export default function AnimatedBackground() {
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-gray-900 via-black to-gray-800 flex items-center justify-center p-4 relative overflow-hidden">
-      
-      {/* 배경 애니메이션 아이콘 */}
+    <>
       <div className="absolute top-20 left-20 text-[#00aec6]/30 animate-bounce">
         <Heart className="w-6 h-6" fill="currentColor" />
       </div>
@@ -19,11 +18,6 @@ export default function LoginLayout({ children }) {
       <div className="absolute bottom-20 right-20 text-[#00aec6]/30 animate-pulse delay-500">
         <Sparkles className="w-6 h-6" />
       </div>
-
-      {/* 가운데 카드 콘텐츠 */}
-      <div className="w-full max-w-md relative z-10">
-        {children}
-      </div>
-    </div>
+    </>
   )
 }
