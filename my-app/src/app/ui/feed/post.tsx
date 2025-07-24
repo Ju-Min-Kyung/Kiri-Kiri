@@ -1,7 +1,6 @@
-// ui/feed.tsx
-import { Card } from "@/ui/card"
-import { ScrollArea } from "@/ui/default/scroll-area"
-import PostCard from "@/ui/PostCard"
+import { Card } from "@/components/ui/card"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import PostCard from "./post-card"
 import React from "react"
 
 const posts = [
