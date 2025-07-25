@@ -19,7 +19,7 @@ export default function CTAButtons() {
           className="flex-1 py-3 text-base font-semibold text-blue-950 border-white/30 rounded-full hover:border-[#00AEC6]"
         >
           {/* TODO: signup 페이지 분리*/}
-          <Link href="/login">회원가입하기</Link>
+          <Link href="/signup">회원가입하기</Link>
         </Button>
       </div>
     </div>
