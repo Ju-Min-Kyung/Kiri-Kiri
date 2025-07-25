@@ -2,5 +2,5 @@
 import AuthCard from "../ui/login/AuthCard";
 
 export default function Page() {
-  return <AuthCard mode="login" />;
+  return <AuthCard mode="signup" />;
 }
