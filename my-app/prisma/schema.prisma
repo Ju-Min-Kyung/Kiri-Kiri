@@ -10,8 +10,8 @@ datasource db {
 model Group {
   code  String @id
   name  String
-  users User[]
   posts Post[]
+  users User[]
 }
 
 model User {
@@ -22,11 +22,12 @@ model User {
   nickname  String?
   profile   String?
   groupCode String
-  group     Group    @relation(fields: [groupCode], references: [code])
   createdAt DateTime @default(now())
-  posts     Post[]
-  following Follow[] @relation("Following")
+  role      Int      @default(0)
   followers Follow[] @relation("Follower")
+  following Follow[] @relation("Following")
+  posts     Post[]
+  group     Group    @relation(fields: [groupCode], references: [code])
 }
 
 model Post {
@@ -37,10 +38,12 @@ model Post {
   mood      String
   mentioned String[]
   authorId  Int?
-  author    User?    @relation(fields: [authorId], references: [id], onDelete: Cascade)
   groupCode String
-  group     Group    @relation(fields: [groupCode], references: [code])
   createdAt DateTime @default(now())
+  likes     Int      @default(0)
+  dislikes  Int      @default(0)
+  author    User?    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  group     Group    @relation(fields: [groupCode], references: [code])
 }
 
 model Follow {
@@ -48,9 +51,8 @@ model Follow {
   followerId  Int
   followingId Int
   createdAt   DateTime @default(now())
-
-  follower  User @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
-  following User @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+  follower    User     @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
 
   @@unique([followerId, followingId])
 }
