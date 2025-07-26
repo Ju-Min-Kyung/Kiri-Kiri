@@ -1,6 +1,5 @@
-"use client";
+// 서버 컴포넌트로 전환
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Settings, MoreHorizontal, Grid3X3 } from "lucide-react";
@@ -8,17 +7,14 @@ import ProfileHeader from "../ui/Profile/ProfileHeader";
 import PostsGrid from "../ui/Profile/PostsGrid";
 
 export default function SNSProfile() {
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [followerCount, setFollowerCount] = useState(1234);
-
-  const handleFollowToggle = () => {
-    setIsFollowing(!isFollowing);
-    setFollowerCount((prev) => (isFollowing ? prev - 1 : prev + 1));
-  };
+  // 임시 placeholder
+  const isFollowing = false;
+  const followerCount = 123;
+  const name= '김우리';
+  const bio = '안녕하세요. 여행과 사진을 좋아하는 개발자입니다✨';
 
   return (
     <div className="space-y-8 bg-gray-50">
-      {/* Top Header */}
       <div className="sticky top-0 z-10 bg-white">
         <div className="border-b border-gray-200 px-6 py-4 flex items-center justify-between">
           <h1 className="text-xl font-semibold text-[#123F6D]">프로필</h1>
@@ -39,7 +35,8 @@ export default function SNSProfile() {
             <ProfileHeader
               isFollowing={isFollowing}
               followerCount={followerCount}
-              onToggleFollow={handleFollowToggle}
+              name={name}
+              bio={bio}
             />
           </CardContent>
         </Card>

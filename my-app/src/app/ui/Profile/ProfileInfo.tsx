@@ -4,18 +4,22 @@ import { UserPlus, UserMinus } from "lucide-react";
 interface Props {
   isFollowing: boolean;
   followerCount: number;
-  onToggleFollow: () => void;
+  name: string;
+  bio: string;
+  onToggleFollow?: () => void;
 }
 
 export default function ProfileInfo({
   isFollowing,
   followerCount,
+  name,
+  bio,
   onToggleFollow,
 }: Props) {
   return (
     <div className="flex-1">
       <div className="flex items-center gap-4 mb-4">
-        <h2 className="text-2xl font-bold text-[#123F6D]">김철수</h2>
+        <h2 className="text-2xl font-bold text-[#123F6D]">{name}</h2>
         <Button
           onClick={onToggleFollow}
           className={`px-8 py-2.5 rounded-full font-medium transition-all ${
@@ -39,9 +43,7 @@ export default function ProfileInfo({
       </div>
 
       <p className="text-[#123F6D]/80 text-lg mb-6 leading-relaxed">
-        안녕하세요! 여행과 사진을 좋아하는 개발자입니다.
-        <br />
-        새로운 경험과 사람들과의 만남을 소중히 여깁니다 ✨
+        {bio}
       </p>
 
       <div className="flex items-center gap-8 mb-6">
@@ -51,6 +53,7 @@ export default function ProfileInfo({
           </div>
           <div className="text-sm text-[#123F6D]/60">팔로워</div>
         </div>
+        {/* 팔로잉, 게시물은 하드코딩된 상태 */}
         <div className="text-center">
           <div className="text-2xl font-bold text-[#123F6D]">892</div>
           <div className="text-sm text-[#123F6D]/60">팔로잉</div>
