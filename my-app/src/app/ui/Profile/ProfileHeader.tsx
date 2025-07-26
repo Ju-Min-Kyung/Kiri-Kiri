@@ -4,21 +4,24 @@ import ProfileInfo from "./ProfileInfo";
 interface Props {
   isFollowing: boolean;
   followerCount: number;
-  onToggleFollow: () => void;
+  name: string;
+  bio: string;
 }
 
 export default function ProfileHeader({
   isFollowing,
   followerCount,
-  onToggleFollow,
+  name,
+  bio,
 }: Props) {
   return (
     <div className="flex items-start gap-8">
-      <ProfileImage />
+      <ProfileImage name={name}/>
       <ProfileInfo
         isFollowing={isFollowing}
         followerCount={followerCount}
-        onToggleFollow={onToggleFollow}
+        name={name}
+        bio={bio}
       />
     </div>
   );
