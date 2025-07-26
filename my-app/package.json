@@ -4,10 +4,20 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "postinstall": "prisma generate",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "seed": "ts-node prisma/seed.ts"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "@tailwindcss/oxide",
+      "prisma",
+      "sharp"
+    ]
   },
   "dependencies": {
     "@prisma/client": "^6.12.0",
