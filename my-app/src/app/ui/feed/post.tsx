@@ -1,44 +1,50 @@
+// app/ui/feed/post.tsx
 import { Card } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import PostCard from "./post-card"
 import React from "react"
 
-const posts = [
-  {
-    id: 1,
-    username: "john_doe",
-    userImage: "/placeholder.svg?height=40&width=40&text=JD",
-    postImage: "/placeholder.svg?height=400&width=400&text=Beautiful+Sunset",
-    caption: "Amazing sunset today! 🌅 #nature #photography",
-    likes: 1234,
-    timeAgo: "2시간 전"
-  },
-  {
-    id: 2,
-    username: "jane_smith",
-    userImage: "/placeholder.svg?height=40&width=40&text=JS",
-    postImage: "/placeholder.svg?height=400&width=400&text=Coffee+Time",
-    caption: "Perfect morning coffee ☕️ #coffee #morning",
-    likes: 856,
-    timeAgo: "4시간 전"
-  },
-  {
-    id: 3,
-    username: "travel_lover",
-    userImage: "/placeholder.svg?height=40&width=40&text=TL",
-    postImage: "/placeholder.svg?height=400&width=400&text=Mountain+View",
-    caption: "Hiking adventures in the mountains! 🏔️ #hiking #adventure",
-    likes: 2341,
-    timeAgo: "6시간 전"
-  }
-]
+type Post = {
+  id: number;
+  content: string;
+  imageUrl: string;
+  likes: number;
+  timeAgo: string;
+  author: {
+    name: string;
+    image: string;
+  };
+};
 
-export default function Feed() {
+export default async function Feed() {
+  const res = await fetch("http://localhost:3000/api/feed", {
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    return <div className="p-4 text-red-500">피드 데이터를 불러올 수 없습니다.</div>;
+  }
+
+  const posts: Post[] = await res.json();
+
   return (
     <ScrollArea className="h-screen">
       <div className="py-8 px-4 space-y-6">
-        {posts.map(post => <PostCard key={post.id} post={post} />)}
+        {posts.map((post) => (
+          <PostCard
+            key={post.id}
+            post={{
+              id: post.id,
+              caption: post.content,
+              postImage: post.imageUrl,
+              likes: post.likes,
+              timeAgo: post.timeAgo,
+              username: post.author.name,
+              userImage: post.author.image,
+            }}
+          />
+        ))}
       </div>
     </ScrollArea>
-  )
+  );
 }
