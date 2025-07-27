@@ -24,7 +24,7 @@ export default function ProfileHeader({
 }: Props) {
   return (
     <div className="flex items-start gap-8">
-      <ProfileImage name={name}/>
+      <ProfileImage name={name} userId={userId}/>
       <ProfileInfo
         isFollowing={isFollowing}
         isOwner={isOwner}
