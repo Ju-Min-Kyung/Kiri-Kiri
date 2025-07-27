@@ -7,9 +7,10 @@ import { UserProfile } from "@/types/user"; // 리턴 타입 정의 위치는 �
 
 interface Props {
   profile: UserProfile;
+  pid: number;
 }
 
-export default function SNSProfile({ profile }: Props) {
+export default function SNSProfile({ profile, pid  }: Props) {
   const {
     name,
     userId,
@@ -51,6 +52,7 @@ export default function SNSProfile({ profile }: Props) {
               postCount={postCount}
               isFollowing={isFollowing}
               isOwner={isOwner}
+              pid={pid}
             />
           </CardContent>
         </Card>
@@ -60,7 +62,7 @@ export default function SNSProfile({ profile }: Props) {
             <Grid3X3 className="w-5 h-5 text-[#123F6D]" />
             <span className="text-lg font-semibold text-[#123F6D]">게시물</span>
           </div>
-          <PostsGrid userPid={profile.pid} />
+          <PostsGrid userPid={pid} />
         </div>
       </div>
     </div>

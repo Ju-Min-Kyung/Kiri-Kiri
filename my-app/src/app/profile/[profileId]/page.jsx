@@ -5,11 +5,12 @@ import SNSProfile from "@/app/ui/Profile/SNSProfile";
 import { notFound } from "next/navigation";
 
 export default async function Page({ params }) {
-  const profileId = Number(params.profileId);
+  const { profileId } = await params;
+  const pid = parseInt(profileId, 10);
   const MOCK_USER_ID = 1;
 
-  const profile = await getUserProfile(profileId, MOCK_USER_ID);
+  const profile = await getUserProfile(pid, MOCK_USER_ID);
   if (!profile) return notFound();
 
-  return <SNSProfile profile={profile} />;
+  return <SNSProfile profile={profile} pid={pid} />;
 }
