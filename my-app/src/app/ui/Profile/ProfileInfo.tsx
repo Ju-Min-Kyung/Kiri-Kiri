@@ -1,5 +1,10 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { UserPlus, UserMinus } from "lucide-react";
+import { useTransition, useState } from "react";
+import { useRouter } from "next/navigation";
+import { followUser, unfollowUser } from "@/lib/follow";
 
 interface Props {
   isFollowing: boolean;
@@ -10,34 +15,87 @@ interface Props {
   name: string;
   userId: string;
   bio: string;
-  onToggleFollow?: () => void;
+  pid: number;
 }
 
 export default function ProfileInfo({
-  isFollowing,
+  isFollowing: initialIsFollowing,
   isOwner,
-  followerCount,
+  followerCount: initialFollowerCount,
   followingCount,
   postCount,
   name,
   userId,
   bio,
-  onToggleFollow,
+  pid,
 }: Props) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  
+  // 로컬 상태로 관리하여 즉각적인 UI 업데이트
+  const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
+  const [followerCount, setFollowerCount] = useState(initialFollowerCount);
+
+  const MOCK_USER_ID = 1;
+
+  const handleToggleFollow = async () => {
+    if (isPending) return;
+
+    // 낙관적 업데이트 (UI 먼저 변경)
+    const wasFollowing = isFollowing;
+    const prevFollowerCount = followerCount;
+    
+    setIsFollowing(!wasFollowing);
+    // 팔로우 대상자(현재 프로필 주인)의 팔로워 수만 변경
+    // (내가 팔로우하면 -> 상대방의 팔로워 +1, 언팔로우하면 -> 상대방의 팔로워 -1)
+    setFollowerCount(prev => wasFollowing ? prev - 1 : prev + 1);
+
+    startTransition(async () => {
+      try {
+        let result;
+        if (wasFollowing) {
+          result = await unfollowUser(MOCK_USER_ID, pid);
+        } else {
+          result = await followUser(MOCK_USER_ID, pid);
+        }
+
+        if (!result.success) {
+          // 실패 시 롤백
+          setIsFollowing(wasFollowing);
+          setFollowerCount(prevFollowerCount);
+          console.error("팔로우 요청 실패:", result.message);
+          alert(result.message);
+        } else {
+          // 성공 시 서버 상태와 동기화
+          router.refresh();
+        }
+      } catch (error) {
+        // 에러 발생 시 롤백
+        setIsFollowing(wasFollowing);
+        setFollowerCount(prevFollowerCount);
+        console.error("팔로우 요청 실패:", error);
+        alert("팔로우 요청에 실패했습니다.");
+      }
+    });
+  };
+
   return (
     <div className="flex-1">
       <div className="flex items-center gap-4 mb-4">
         <h2 className="text-2xl font-bold text-[#123F6D]">{name}</h2>
         {!isOwner && (
           <Button
-            onClick={onToggleFollow}
+            onClick={handleToggleFollow}
+            disabled={isPending}
             className={`px-8 py-2.5 rounded-full font-medium transition-all ${
               isFollowing
                 ? "bg-gray-100 text-[#123F6D] hover:bg-gray-200 border border-gray-300"
                 : "bg-gradient-to-r from-[#0067AC] to-[#00AEC6] text-white hover:shadow-lg hover:scale-105"
-            }`}
+            } ${isPending ? "opacity-50 cursor-not-allowed" : ""}`}
           >
-            {isFollowing ? (
+            {isPending ? (
+              <div className="w-4 h-4 mr-2 border-2 border-current border-t-transparent rounded-full animate-spin" />
+            ) : isFollowing ? (
               <>
                 <UserMinus className="w-4 h-4 mr-2" />
                 언팔로우
