@@ -1,22 +1,55 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Home, Search, Compass, PlusSquare, Bell, User } from "lucide-react"
+import Link from "next/link"
 import React from "react"
 
 export default function Sidebar() {
   return (
     <div className="w-64 fixed left-0 top-0 h-full bg-white border-r border-gray-200 p-6">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold" style={{ color: '#0067AC' }}>끼리끼리</h1>
+        <Link href="/feed">
+          <h1 className="text-2xl font-bold cursor-pointer" style={{ color: '#0067AC' }}>
+            끼리끼리
+          </h1>
+        </Link>
       </div>
 
       <nav className="space-y-4">
-        {[{ icon: Home, label: '홈' }, { icon: Search, label: '검색' }, { icon: Compass, label: '탐색' }, { icon: PlusSquare, label: '만들기' }, { icon: Bell, label: '알림' }, { icon: User, label: '프로필' }].map(({ icon: Icon, label }) => (
-          <Button key={label} variant="ghost" className="w-full justify-start gap-3 text-left hover:bg-blue-50" style={{ color: '#123F6D' }}>
-            <Icon className="w-6 h-6" style={{ color: '#0067AC' }} />
-            {label}
+        {[
+          { icon: Home, label: '홈', href: '/feed' },
+          { icon: Search, label: '검색' },
+          { icon: Compass, label: '탐색' },
+          { icon: PlusSquare, label: '만들기' },
+          { icon: Bell, label: '알림' }
+        ].map(({ icon: Icon, label, href }) => {
+          const button = (
+            <Button
+              key={label}
+              variant="ghost"
+              className="w-full justify-start gap-3 text-left hover:bg-blue-50"
+              style={{ color: '#123F6D' }}
+            >
+              <Icon className="w-6 h-6" style={{ color: '#0067AC' }} />
+              {label}
+            </Button>
+          );
+
+          return href ? (
+            <Link key={label} href={href} passHref>
+              {button}
+            </Link>
+          ) : (
+            button
+          );
+        })}
+
+        <Link href="/profile" passHref>
+          <Button variant="ghost" className="w-full justify-start gap-3 text-left hover:bg-blue-50" style={{ color: '#123F6D' }}>
+            <User className="w-6 h-6" style={{ color: '#0067AC' }} />
+            프로필
           </Button>
-        ))}
+        </Link>
       </nav>
 
       <div className="absolute bottom-6 left-6 right-6">
