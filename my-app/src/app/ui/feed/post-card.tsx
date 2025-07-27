@@ -11,7 +11,7 @@ export default function PostCard({ post }: { post: any }) {
       <CardHeader className="flex flex-row items-center justify-between p-4">
         <div className="flex items-center gap-3">
           <Avatar className="w-8 h-8">
-            <AvatarImage src={post.userImage || "/placeholder.svg"} />
+           
             <AvatarFallback>{post.username[0].toUpperCase()}</AvatarFallback>
           </Avatar>
           <div>

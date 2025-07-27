@@ -4,13 +4,12 @@ import { Separator } from "@/components/ui/separator"
 import { Heart, MessageCircle } from "lucide-react"
 import React from "react"
 
-const followingUsers = [
-  { username: "best_friend", name: "베스트 프렌드", image: "/placeholder.svg?height=32&width=32&text=BF", isOnline: true },
-  { username: "family_member", name: "가족", image: "/placeholder.svg?height=32&width=32&text=FM", isOnline: false },
-  { username: "work_colleague", name: "직장 동료", image: "/placeholder.svg?height=32&width=32&text=WC", isOnline: true }
-]
+type User = {
+  pid: number
+  name: string
+}
 
-export default function FollowList() {
+export default function FollowList({ followings = [] }: { followings: User[] }) {
   return (
     <div className="w-80 fixed right-0 top-0 h-full bg-white border-l border-gray-200 p-6">
       <div className="mb-6">
@@ -22,25 +21,22 @@ export default function FollowList() {
         </div>
 
         <div className="space-y-3">
-          {followingUsers.map((user) => (
-            <div key={user.username} className="flex items-center justify-between">
+          {followings.map((user) => (
+            <div key={user.pid} className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <Avatar className="w-8 h-8">
-                    <AvatarImage src={user.image || "/placeholder.svg"} />
-                    <AvatarFallback>{user.name[0]}</AvatarFallback>
+
+                    <AvatarFallback>{user.name?.[0] || "?"}</AvatarFallback>
                   </Avatar>
-                  {user.isOnline && (
-                    <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
-                  )}
                 </div>
                 <div>
-                  <p className="font-semibold text-sm" style={{ color: '#123F6D' }}>{user.username}</p>
+                  <p className="font-semibold text-sm" style={{ color: '#123F6D' }}>{user.name}</p>
                   <p className="text-xs text-gray-500">{user.name}</p>
                 </div>
               </div>
               <div className="text-xs text-gray-400">
-                {user.isOnline ? "온라인" : "오프라인"}
+                {"온라인"}
               </div>
             </div>
           ))}

@@ -1,11 +1,22 @@
-import Feed from "../ui/feed/post"
-import FollowList from "../ui/feed/follow-lists"
+// app/feed/page.tsx
+import Feed from "@/app/ui/feed/post"
+import FollowList from "@/app/ui/feed/follow-lists"
 
-export default function page() {
+export default async function Page() {
+  const res = await fetch("http://localhost:3000/api/feed", {
+    cache: "no-store",
+  })
+
+  if (!res.ok) {
+    return <div className="p-4 text-red-500">데이터를 불러올 수 없습니다.</div>
+  }
+
+  const { posts, followings } = await res.json()
+
   return (
     <>
-      <Feed />
-      <FollowList />
+      <Feed posts={posts} />
+      <FollowList followings={followings} />
     </>
   )
 }
