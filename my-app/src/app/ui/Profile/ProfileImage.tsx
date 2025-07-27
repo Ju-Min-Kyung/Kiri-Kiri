@@ -13,6 +13,7 @@ export default function ProfileImage({ name, userId }: { name: string; userId: s
             height={128}
             className="w-full h-full rounded-full object-cover"
             unoptimized
+            priority 
           />
         </div>
       </div>
