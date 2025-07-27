@@ -10,23 +10,22 @@ datasource db {
 model Group {
   code  String @id
   name  String
-  users User[]
   posts Post[]
+  User  User[]
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String
-  password  String
-  nickname  String?
-  profile   String?
-  groupCode String
-  group     Group    @relation(fields: [groupCode], references: [code])
-  createdAt DateTime @default(now())
-  posts     Post[]
-  following Follow[] @relation("Following")
-  followers Follow[] @relation("Follower")
+  pid        Int      @id @default(autoincrement())
+  id         String   @unique @db.VarChar(50)
+  name       String
+  password   String
+  secretCode String
+  createdAt  DateTime @default(now()) @db.Timestamp(6)
+  role       Int      @default(0)
+  followers  Follow[] @relation("Follower")
+  following  Follow[] @relation("Following")
+  posts      Post[]
+  Group      Group    @relation(fields: [secretCode], references: [code])
 }
 
 model Post {
@@ -37,10 +36,12 @@ model Post {
   mood      String
   mentioned String[]
   authorId  Int?
-  author    User?    @relation(fields: [authorId], references: [id], onDelete: Cascade)
   groupCode String
-  group     Group    @relation(fields: [groupCode], references: [code])
   createdAt DateTime @default(now())
+  likes     Int      @default(0)
+  dislikes  Int      @default(0)
+  author    User?    @relation(fields: [authorId], references: [pid], onDelete: Cascade)
+  group     Group    @relation(fields: [groupCode], references: [code])
 }
 
 model Follow {
@@ -48,9 +49,8 @@ model Follow {
   followerId  Int
   followingId Int
   createdAt   DateTime @default(now())
-
-  follower  User @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
-  following User @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+  follower    User     @relation("Follower", fields: [followerId], references: [pid], onDelete: Cascade)
+  following   User     @relation("Following", fields: [followingId], references: [pid], onDelete: Cascade)
 
   @@unique([followerId, followingId])
 }
