@@ -7,10 +7,9 @@ import { notFound } from "next/navigation";
 export default async function Page({
   params,
 }: {
-  params: Promise<{ profileId: string }>; // Promise 타입으로 변경
+  params: { profileId: string };
 }) {
-  const { profileId } = await params; // params를 await
-  const pid = parseInt(profileId, 10);
+  const pid = parseInt(params.profileId, 10);
   const MOCK_USER_ID = 1;
 
   const profile = await getUserProfile(pid, MOCK_USER_ID);

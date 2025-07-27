@@ -1,3 +1,5 @@
+'use client'
+
 import ProfileImage from "./ProfileImage";
 import ProfileInfo from "./ProfileInfo";
 
@@ -10,6 +12,7 @@ interface Props {
   name: string;
   userId: string;
   bio: string;
+  pid: number;
 }
 
 export default function ProfileHeader({
@@ -21,6 +24,7 @@ export default function ProfileHeader({
   name,
   userId,
   bio,
+  pid
 }: Props) {
   return (
     <div className="flex items-start gap-8">
@@ -34,6 +38,7 @@ export default function ProfileHeader({
         name={name}
         userId={userId}
         bio={bio}
+        pid={pid}
       />
     </div>
   );
