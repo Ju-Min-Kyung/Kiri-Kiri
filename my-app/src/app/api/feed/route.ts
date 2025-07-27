@@ -3,11 +3,11 @@ import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
 // 개발용 Mock 세션 유저 (로그인한 유저라고 가정)
-const MOCK_USER_EMAIL = "alice@openai.com"; // DB에 있는 사용자 이메일로 설정!
+const MOCK_PID = 2; // DB에 있는 사용자 pid로 설정
 
 export async function GET() {
   const user = await prisma.user.findUnique({
-    where: { email: MOCK_USER_EMAIL },
+    where: { pid: MOCK_PID },
     select: { id: true },
   });
 
@@ -16,7 +16,7 @@ export async function GET() {
   }
 
   const following = await prisma.follow.findMany({
-    where: { followerId: user.id },
+    where: { followerId: user.pid },
     select: { followingId: true },
   });
 

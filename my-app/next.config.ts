@@ -4,14 +4,13 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'd34u8crftukxnk.cloudfront.net',
+        hostname: 'upload.wikimedia.org',
         port: '',
-        pathname: '/**',
+        pathname: '/wikipedia/commons/**',
       },
-      // 기존에 등록한 도메인도 여기 포함해야 합니다.
       {
         protocol: 'https',
-        hostname: 'i.ibb.co',
+        hostname: 'cdn.crowdpic.net',
         port: '',
         pathname: '/**',
       },
