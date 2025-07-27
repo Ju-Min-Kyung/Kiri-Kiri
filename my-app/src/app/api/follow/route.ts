@@ -1,18 +1,35 @@
+// src/app/api/follow/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
 // [POST] /api/follow → 팔로우 추가
 export async function POST(req: NextRequest) {
-  // 요청 body에서 followerId, followingId 추출
-  const { followerId, followingId } = await req.json();
-
-  // 필수 값 누락 시 400 반환
-  if (!followerId || !followingId) {
-    return NextResponse.json({ message: "Missing ids" }, { status: 400 });
-  }
-
   try {
-    // Follow 테이블에 새로운 관계 추가
+    const { followerId, followingId } = await req.json();
+
+    if (!followerId || !followingId) {
+      return NextResponse.json({ message: "Missing ids" }, { status: 400 });
+    }
+
+    if (followerId === followingId) {
+      return NextResponse.json({ message: "Cannot follow yourself" }, { status: 400 });
+    }
+
+    // 이미 팔로우 중인지 확인
+    const existingFollow = await prisma.follow.findUnique({
+      where: {
+        followerId_followingId: {
+          followerId,
+          followingId,
+        },
+      },
+    });
+
+    if (existingFollow) {
+      return NextResponse.json({ message: "Already following" }, { status: 200 });
+    }
+
+    // 팔로우 추가
     await prisma.follow.create({
       data: {
         followerId,
@@ -20,35 +37,37 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ message: "Followed" }, { status: 200 });
+    return NextResponse.json({ message: "Followed successfully" }, { status: 200 });
   } catch (error) {
-    // 이미 팔로우했거나 DB 에러 발생 시
-    return NextResponse.json({ message: "Already followed or DB error" }, { status: 500 });
+    console.error("Follow POST error:", error);
+    return NextResponse.json({ message: "Follow failed" }, { status: 500 });
   }
 }
 
-// [DELETE] /api/follow → 팔로우 제거 (언팔로우)
+// [DELETE] /api/follow → 언팔로우
 export async function DELETE(req: NextRequest) {
-  // 요청 body에서 followerId, followingId 추출
-  const { followerId, followingId } = await req.json();
-
-  // 필수 값 누락 시 400 반환
-  if (!followerId || !followingId) {
-    return NextResponse.json({ message: "Missing ids" }, { status: 400 });
-  }
-
   try {
-    // 해당 관계를 삭제 (deleteMany 사용 → 안전하게 중복 제거)
-    await prisma.follow.deleteMany({
+    const { followerId, followingId } = await req.json();
+
+    if (!followerId || !followingId) {
+      return NextResponse.json({ message: "Missing ids" }, { status: 400 });
+    }
+
+    // 팔로우 관계 삭제
+    const deleted = await prisma.follow.deleteMany({
       where: {
         followerId,
         followingId,
       },
     });
 
-    return NextResponse.json({ message: "Unfollowed" }, { status: 200 });
+    if (deleted.count === 0) {
+      return NextResponse.json({ message: "Follow relationship not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: "Unfollowed successfully" }, { status: 200 });
   } catch (error) {
-    // 삭제 실패 시
-    return NextResponse.json({ message: "Error unfollowing" }, { status: 500 });
+    console.error("Follow DELETE error:", error);
+    return NextResponse.json({ message: "Unfollow failed" }, { status: 500 });
   }
 }
